@@ -4,8 +4,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="includes/style/style.css">
-  <link rel="stylesheet" href="includes/bootstrap-5.3.3-dist/css/bootstrap.min.css">
-  <link rel="stylesheet" href="includes/fontawesome-free-6.7.2-web/css/brands.min.css">
+  <link rel="stylesheet" href="includes/style/bootstrap.min.css">
+  <link rel="stylesheet" href="includes/style/brands.min.css">
 
   <title>Link Gen for FlickR and SL-Profile</title>
 </head>
@@ -64,7 +64,7 @@
 
 
 
-<script src="includes/bootstrap-5.3.3-dist/js/bootstrap.min.js"></script>
+<script src="includes/js/bootstrap.min.js"></script>
 <script src="includes/js/link-creator.js"></script>
 
 
