@@ -1,64 +1,72 @@
-<input type="text" id="uri" placeholder="Gib eine URL ein">
-<button id="submit">Generate Code</button>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="includes/style/style.css">
+  <link rel="stylesheet" href="includes/style/bootstrap.min.css">
+  <link rel="stylesheet" href="includes/style/brands.min.css">
 
-<div id="output-container" style="margin-top: 20px; display: none;">
-  <div id="output" style="
-    background-color: #f4f4f4;
-    padding: 10px;
-    border-radius: 5px;
-    font-family: monospace;
-    white-space: pre-wrap;
-    position: relative;
-  ">
-    <code></code>
-    <button id="copy-btn" style="
-      position: absolute;
-      top: 10px;
-      right: 10px;
-      padding: 5px 10px;
-      background-color: #007bff;
-      color: white;
-      border: none;
-      border-radius: 3px;
-      cursor: pointer;
-      font-size: 12px;
-    ">Copy</button>
-  </div>
-</div>
-
-<script>
-  let getUri = document.querySelector("#uri");
-  let button = document.querySelector("#submit");
-  let outputContainer = document.querySelector("#output-container");
-  let outputCode = document.querySelector("#output code");
-  let copyButton = document.querySelector("#copy-btn");
-
-  button.addEventListener("click", function () {
-    if (getUri.value.trim() === "") {
-      alert("Bitte eine gültige URL eingeben.");
-      return;
-    }
-
-    // Erstelle den HTML-Code
-    let linkHtml = `<a href="${getUri.value}" target="_blank">${getUri.value}</a>`;
+  <title>Link Gen for FlickR and SL-Profile</title>
+</head>
+<body>
+<div class="container d-flex flex-column justify-content-center align-items-center vh-100 text-center">
+    <h1 class="mb-4">Link Generator</h1>
     
-    // Zeige den Code im Container an
-    outputContainer.style.display = "block";
-    outputCode.textContent = linkHtml;
-  });
+    <!-- Eingabefeld für Link -->
+    <div class="mb-3 w-100" style="max-width: 500px;">
+      <input type="text" id="uri" class="form-control" placeholder="Gib die URL ein">
+    </div>
 
-  // Copy-to-Clipboard Funktion
-  copyButton.addEventListener("click", function () {
-    let textToCopy = outputCode.textContent;
+    <!-- Eingabefeld für Titel/Word -->
+    <div class="mb-3 w-100" style="max-width: 500px;">
+      <input type="text" id="title" class="form-control" placeholder="Gib den Titel oder das Word ein">
+    </div>
 
-    // Text in die Zwischenablage kopieren
-    navigator.clipboard.writeText(textToCopy).then(
-      () => {
-        alert("Code wurde kopiert!");
-      },
-      (err) => {
-        alert("Fehler beim Kopieren: " + err);
-      }
-    );
-  });
-</script>
+    <!-- Dropdown-Menü für Link-Typ -->
+    <div class="mb-3 w-100" style="max-width: 500px;">
+      <select id="link-type" class="form-select">
+        <option value="flickr">FlickR</option>
+        <option value="secondlife">Second Life Profile Link</option>
+      </select>
+    </div>
+
+    <!-- Button -->
+    <button id="submit" class="btn btn-primary mb-4">
+      <i class="fas fa-link"></i> Generate Code
+    </button>
+
+    <!-- Error Container -->
+     <div id="error-container" ></div>
+
+    <!-- Code-Container -->
+    <div id="output-container" class="card shadow-sm text-start w-100" style="max-width: 500px; display: none;">
+      <div class="card-body position-relative">
+        <pre id="output" class="mb-0"><code></code></pre>
+        <!-- Kopier-Button -->
+        <button id="copy-btn" class="btn btn-sm btn-secondary position-absolute" style="top: 10px; right: 10px;">
+          <i class="fas fa-copy"></i> Copy
+        </button>
+      </div>
+    </div>
+    <!-- Footer -->
+<footer class="text-center py-3 mt-5">
+  <div class="container">
+    <p class="mb-0">
+      &copy; 2024 | Made by 
+      <a href="https://tmlr.eu" class="text-decoration-none" target="_blank" rel="noreferrer">
+      TMLR
+      </a>
+    </p>
+  </div>
+</footer>
+  </div>
+
+
+
+<script src="includes/js/bootstrap.min.js"></script>
+<script src="includes/js/link-creator.js"></script>
+
+
+</body>
+</html>
