@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="includes/style/style.css">
   <link rel="stylesheet" href="includes/style/bootstrap.min.css">
-  <link rel="stylesheet" href="includes/style/brands.min.css">
+  <link rel="stylesheet" href="includes/style/fontawesome.min.css">
 
   <title>Link Gen for FlickR and SL-Profile</title>
 </head>
@@ -53,7 +53,7 @@
 <footer class="text-center py-3 mt-5">
   <div class="container">
     <p class="mb-0">
-      &copy; 2024 | Made by 
+      <span id="copyright">&copy; 2024</span> | Made by 
       <a href="https://tmlr.eu" class="text-decoration-none" target="_blank" rel="noreferrer">
       TMLR
       </a>
@@ -66,6 +66,8 @@
 
 <script src="includes/js/bootstrap.min.js"></script>
 <script src="includes/js/link-creator.js"></script>
+<script src="includes/js/copyright.js"></script>
+
 
 
 </body>
