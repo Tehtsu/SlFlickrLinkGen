@@ -1,7 +1,5 @@
 const copyrightSpan = document.querySelector("#copyright");
 
-console.log("COPY", copyrightSpan.innerHTML);
-
 const dateYear = new Date();
 let year = dateYear.getFullYear();
 console.log(typeof year);
