@@ -7,9 +7,11 @@ import { LinkGenerator } from "@/components/link-generator";
 
 export default async function Home() {
   // const session = await getServerSession(authOptions);
-  const variant = "FlickR und SL Link";
+  const variant = "FlickR and SL Link";
   const hasSidebar = false; // set true when auth panel is active
-  const columns = hasSidebar ? "2fr 1fr" : "minmax(0, 720px)";
+  const columns = hasSidebar
+    ? "2fr 1fr"
+    : "minmax(0, 720px)";
 
   return (
     <main
