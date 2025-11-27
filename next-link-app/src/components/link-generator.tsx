@@ -1,0 +1,209 @@
+"use client";
+
+import { useState, useTransition } from "react";
+import Link from "next/link";
+
+type LinkType = "flickr" | "secondlife";
+
+export function LinkGenerator({
+  variant,
+}: {
+  variant: string;
+}) {
+  const [url, setUrl] = useState("");
+  const [title, setTitle] = useState("");
+  const [type, setType] = useState<LinkType>(
+    variant === "secondlife" ? "secondlife" : "flickr"
+  );
+  const [output, setOutput] = useState("");
+  const [message, setMessage] = useState<string | null>(
+    null
+  );
+  const [saved, setSaved] = useState<boolean | null>(null);
+  const [isPending, startTransition] = useTransition();
+
+  const handleSubmit = () => {
+    setMessage(null);
+    if (!url.trim()) {
+      setMessage("Please enter a valid URL.");
+      return;
+    }
+
+    startTransition(async () => {
+      const res = await fetch("/api/links", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          url: url.trim(),
+          title: title.trim(),
+          type,
+        }),
+      });
+
+      if (!res.ok) {
+        const data = await res.json().catch(() => null);
+        setMessage(data?.error ?? "Error while saving");
+        return;
+      }
+
+      const data = await res.json();
+      setOutput(data.html);
+      setSaved(Boolean(data.saved));
+      setMessage(
+        data.saved
+          ? "Link saved and generated."
+          : "Link generated (not saved because you are not logged in)."
+      );
+    });
+  };
+
+  const handleCopy = async () => {
+    if (!output) return;
+    await navigator.clipboard.writeText(output);
+    setMessage("Code wurde kopiert!");
+  };
+
+  return (
+    <div className="panel" style={{ padding: "24px" }}>
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+          gap: 12,
+          marginBottom: 12,
+        }}
+      >
+        <div>
+          <p className="badge">Generator · {variant}</p>
+          <h1
+            style={{
+              fontSize: "28px",
+              marginTop: 8,
+              fontWeight: 700,
+            }}
+          >
+            Links erstellen
+          </h1>
+          <p className="muted" style={{ marginTop: 4 }}>
+            Erzeuge Flickr-Links als &lt;a&gt; oder
+            SecondLife-Links im [url title] Format.
+          </p>
+        </div>
+        <Link
+          href="/history"
+          className="btn text-center"
+          style={{ textDecoration: "none" }}
+        >
+          View history
+        </Link>
+      </div>
+
+      <div
+        style={{ display: "grid", gap: 14, marginTop: 12 }}
+      >
+        <label style={{ display: "grid", gap: 6 }}>
+          <span className="muted">URL</span>
+          <input
+            className="input"
+            placeholder="https://example.com"
+            value={url}
+            onChange={(e) => setUrl(e.target.value)}
+            type="url"
+          />
+        </label>
+
+        <label style={{ display: "grid", gap: 6 }}>
+          <span className="muted">Titel (optional)</span>
+          <input
+            className="input"
+            placeholder="Titel oder Text"
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
+          />
+        </label>
+
+        <label style={{ display: "grid", gap: 6 }}>
+          <span className="muted">Typ</span>
+          <select
+            className="input"
+            value={type}
+            onChange={(e) =>
+              setType(e.target.value as LinkType)
+            }
+          >
+            <option value="flickr">
+              Flickr (&lt;a&gt;-Tag)
+            </option>
+            <option value="secondlife">
+              SecondLife ([url title])
+            </option>
+          </select>
+        </label>
+
+        <button
+          className="btn"
+          onClick={handleSubmit}
+          disabled={isPending}
+        >
+          {isPending
+            ? "Wird gespeichert..."
+            : "Link generieren & sichern"}
+        </button>
+      </div>
+
+      {message && (
+        <p className="muted" style={{ marginTop: 12 }}>
+          {message}
+        </p>
+      )}
+
+      {output && (
+        <div style={{ marginTop: 20 }}>
+          <div
+            className="badge"
+            style={{ marginBottom: 8 }}
+          >
+            Result
+          </div>
+          <div
+            className="panel"
+            style={{
+              padding: 12,
+              borderStyle: "dashed",
+              wordBreak: "break-word",
+            }}
+          >
+            <code style={{ color: "#c4d4ff" }}>
+              {output}
+            </code>
+          </div>
+          <div
+            style={{
+              display: "flex",
+              gap: 10,
+              marginTop: 10,
+              flexWrap: "wrap",
+            }}
+          >
+            <button className="btn" onClick={handleCopy}>
+              Copy
+            </button>
+            <Link
+              href="/history"
+              className="btn"
+              style={{ textDecoration: "none" }}
+            >
+              View history
+            </Link>
+            {saved === false && (
+              <span className="muted">
+                Sign in to store the link in your history.
+              </span>
+            )}
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
