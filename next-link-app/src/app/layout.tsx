@@ -21,7 +21,7 @@ const title = `${variant} Link Generator`;
 
 export const metadata: Metadata = {
   title,
-  description: "Link generator with history and login",
+  description: "", //"Link generator with history and login",
 };
 
 export default function RootLayout({

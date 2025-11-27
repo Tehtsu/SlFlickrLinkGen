@@ -50,9 +50,7 @@ export function LinkGenerator({
       setOutput(data.html);
       setSaved(Boolean(data.saved));
       setMessage(
-        data.saved
-          ? "Link saved and generated."
-          : "Link generated (not saved because you are not logged in)."
+        data.saved ? "Link generated." : "Link generated"
       );
     });
   };
@@ -60,7 +58,7 @@ export function LinkGenerator({
   const handleCopy = async () => {
     if (!output) return;
     await navigator.clipboard.writeText(output);
-    setMessage("Code wurde kopiert!");
+    setMessage("Code has been copied!");
   };
 
   return (
@@ -83,20 +81,20 @@ export function LinkGenerator({
               fontWeight: 700,
             }}
           >
-            Links erstellen
+            Create links
           </h1>
           <p className="muted" style={{ marginTop: 4 }}>
-            Erzeuge Flickr-Links als &lt;a&gt; oder
-            SecondLife-Links im [url title] Format.
+            Generate Flickr links as &lt;a&gt; or Second
+            Life links in [url title] format.
           </p>
         </div>
-        <Link
+        {/* <Link
           href="/history"
           className="btn text-center"
           style={{ textDecoration: "none" }}
         >
           View history
-        </Link>
+        </Link> */}
       </div>
 
       <div
@@ -114,10 +112,10 @@ export function LinkGenerator({
         </label>
 
         <label style={{ display: "grid", gap: 6 }}>
-          <span className="muted">Titel (optional)</span>
+          <span className="muted">Title (optional)</span>
           <input
             className="input"
-            placeholder="Titel oder Text"
+            placeholder="Title or text"
             value={title}
             onChange={(e) => setTitle(e.target.value)}
           />
@@ -146,9 +144,7 @@ export function LinkGenerator({
           onClick={handleSubmit}
           disabled={isPending}
         >
-          {isPending
-            ? "Wird gespeichert..."
-            : "Link generieren & sichern"}
+          {isPending ? "is generated..." : "Generate link"}
         </button>
       </div>
 
@@ -189,7 +185,7 @@ export function LinkGenerator({
             <button className="btn" onClick={handleCopy}>
               Copy
             </button>
-            <Link
+            {/* <Link
               href="/history"
               className="btn"
               style={{ textDecoration: "none" }}
@@ -200,7 +196,7 @@ export function LinkGenerator({
               <span className="muted">
                 Sign in to store the link in your history.
               </span>
-            )}
+            )} */}
           </div>
         </div>
       )}
