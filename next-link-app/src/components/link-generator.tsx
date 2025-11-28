@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useTransition } from "react";
-import Link from "next/link";
+import { useSession } from "next-auth/react";
 
 type LinkType = "flickr" | "secondlife";
 
@@ -10,6 +10,8 @@ export function LinkGenerator({
 }: {
   variant: string;
 }) {
+  const { data: session } = useSession();
+  const isAuthenticated = Boolean(session?.user);
   const [url, setUrl] = useState("");
   const [title, setTitle] = useState("");
   const [type, setType] = useState<LinkType>(
@@ -24,6 +26,7 @@ export function LinkGenerator({
 
   const handleSubmit = () => {
     setMessage(null);
+    setSaved(null);
     if (!url.trim()) {
       setMessage("Please enter a valid URL.");
       return;
@@ -50,7 +53,9 @@ export function LinkGenerator({
       setOutput(data.html);
       setSaved(Boolean(data.saved));
       setMessage(
-        data.saved ? "Link generated." : "Link generated"
+        data.saved
+          ? "Link saved and generated."
+          : "Link generated (not saved)."
       );
     });
   };
@@ -84,8 +89,8 @@ export function LinkGenerator({
             Create links
           </h1>
           <p className="muted" style={{ marginTop: 4 }}>
-            Generate Flickr links as &lt;a&gt; or Second
-            Life links in [url title] format.
+            Generate Flickr links as &lt;a&gt; or SecondLife
+            links in [url title] format.
           </p>
         </div>
         {/* <Link
@@ -144,7 +149,11 @@ export function LinkGenerator({
           onClick={handleSubmit}
           disabled={isPending}
         >
-          {isPending ? "is generated..." : "Generate link"}
+          {isPending
+            ? "Saving..."
+            : isAuthenticated
+            ? "Save and generate link"
+            : "Generate link"}
         </button>
       </div>
 
