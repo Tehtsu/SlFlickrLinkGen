@@ -21,12 +21,10 @@ export function LinkGenerator({
   const [message, setMessage] = useState<string | null>(
     null
   );
-  const [saved, setSaved] = useState<boolean | null>(null);
   const [isPending, startTransition] = useTransition();
 
   const handleSubmit = () => {
     setMessage(null);
-    setSaved(null);
     if (!url.trim()) {
       setMessage("Please enter a valid URL.");
       return;
@@ -51,7 +49,6 @@ export function LinkGenerator({
 
       const data = await res.json();
       setOutput(data.html);
-      setSaved(Boolean(data.saved));
       setMessage(
         data.saved
           ? "Link saved and generated."
@@ -67,27 +64,11 @@ export function LinkGenerator({
   };
 
   return (
-    <div className="panel" style={{ padding: "24px" }}>
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-          gap: 12,
-          marginBottom: 12,
-        }}
-      >
+    <div className="panel generator-panel">
+      <div className="generator-heading">
         <div>
-          <p className="badge">Generator · {variant}</p>
-          <h1
-            style={{
-              fontSize: "28px",
-              marginTop: 8,
-              fontWeight: 700,
-            }}
-          >
-            Create links
-          </h1>
+          <p className="badge">Generator - {variant}</p>
+          <h1 className="generator-title">Create links</h1>
           <p className="muted" style={{ marginTop: 4 }}>
             Generate Flickr links as &lt;a&gt; or SecondLife
             links in [url title] format.
@@ -102,9 +83,7 @@ export function LinkGenerator({
         </Link> */}
       </div>
 
-      <div
-        style={{ display: "grid", gap: 14, marginTop: 12 }}
-      >
+      <div className="generator-form">
         <label style={{ display: "grid", gap: 6 }}>
           <span className="muted">URL</span>
           <input
@@ -183,14 +162,7 @@ export function LinkGenerator({
               {output}
             </code>
           </div>
-          <div
-            style={{
-              display: "flex",
-              gap: 10,
-              marginTop: 10,
-              flexWrap: "wrap",
-            }}
-          >
+          <div className="generator-footer">
             <button className="btn" onClick={handleCopy}>
               Copy
             </button>
