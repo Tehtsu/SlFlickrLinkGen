@@ -22,7 +22,7 @@ export async function POST(request: Request) {
   });
 
   if (!tokenRecord || tokenRecord.expires < new Date()) {
-    return NextResponse.json({ error: "Ungültiger oder abgelaufener Token" }, { status: 400 });
+    return NextResponse.json({ error: "Invalid or expired token" }, { status: 400 });
   }
 
   const user = await prisma.user.findUnique({
@@ -31,7 +31,7 @@ export async function POST(request: Request) {
 
   if (!user) {
     await prisma.verificationToken.deleteMany({ where: { identifier: tokenRecord.identifier } });
-    return NextResponse.json({ error: "Benutzer nicht gefunden" }, { status: 400 });
+    return NextResponse.json({ error: "User not found" }, { status: 400 });
   }
 
   const passwordHash = await hash(parsed.data.password, 10);

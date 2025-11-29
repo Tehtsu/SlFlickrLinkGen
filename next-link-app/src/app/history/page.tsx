@@ -1,6 +1,6 @@
+import { AuthModal } from "@/components/auth-modal";
 import Link from "next/link";
 import { getServerSession } from "next-auth";
-import { AuthPanel } from "@/components/auth-panel";
 import { CopyButton } from "@/components/copy-button";
 import { HistoryFilters } from "@/components/history-filters";
 import { buildLink } from "@/lib/link-generator";
@@ -10,24 +10,69 @@ import { authOptions } from "@/lib/auth";
 
 const PAGE_SIZE = 10;
 
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
 export default async function HistoryPage({
   searchParams,
 }: {
-  searchParams: { [key: string]: string | string[] | undefined };
+  searchParams: Promise<{
+    [key: string]: string | string[] | undefined;
+  }>;
 }) {
   const session = await getServerSession(authOptions);
   if (!session?.user?.id) {
     return (
-      <main style={{ maxWidth: 1080, margin: "0 auto", padding: "40px 20px" }}>
-        <AuthPanel />
+      <main
+        style={{ maxWidth: 1080, margin: "0 auto", padding: "40px 20px" }}
+      >
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            gap: 12,
+            marginBottom: 18,
+          }}
+        >
+          <div>
+            <p className="badge">History</p>
+            <h1 style={{ fontSize: 28, fontWeight: 700, marginTop: 8 }}>
+              Created links
+            </h1>
+            <p className="muted" style={{ marginTop: 4 }}>
+              Please sign in to view your history.
+            </p>
+          </div>
+          <Link href="/" className="btn" style={{ textDecoration: "none" }}>
+            Back to generator
+          </Link>
+        </div>
+        <div style={{ maxWidth: 520 }}>
+          <AuthModal triggerLabel="Login / Register" />
+        </div>
       </main>
     );
   }
 
-  const type = typeof searchParams.type === "string" ? searchParams.type : undefined;
-  const from = typeof searchParams.from === "string" ? searchParams.from : undefined;
-  const to = typeof searchParams.to === "string" ? searchParams.to : undefined;
-  const page = Math.max(1, Number(searchParams.page ?? 1));
+  const resolvedParams = await searchParams;
+
+  const typeParam =
+    typeof resolvedParams.type === "string"
+      ? resolvedParams.type.toLowerCase()
+      : undefined;
+  const type =
+    typeParam === "flickr" || typeParam === "secondlife"
+      ? typeParam
+      : undefined;
+  const from =
+    typeof resolvedParams.from === "string"
+      ? resolvedParams.from
+      : undefined;
+  const to =
+    typeof resolvedParams.to === "string" ? resolvedParams.to : undefined;
+  const pageRaw = Number(resolvedParams.page ?? 1);
+  const page = Number.isFinite(pageRaw) && pageRaw > 0 ? pageRaw : 1;
 
   const where: any = { userId: session.user.id };
   if (type === "flickr" || type === "secondlife") where.type = type;
@@ -60,10 +105,20 @@ export default async function HistoryPage({
 
   return (
     <main style={{ maxWidth: 1080, margin: "0 auto", padding: "40px 20px" }}>
-      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: 12, marginBottom: 18 }}>
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+          gap: 12,
+          marginBottom: 18,
+        }}
+      >
         <div>
           <p className="badge">History</p>
-          <h1 style={{ fontSize: 28, fontWeight: 700, marginTop: 8 }}>Created links</h1>
+          <h1 style={{ fontSize: 28, fontWeight: 700, marginTop: 8 }}>
+            Created links
+          </h1>
           <p className="muted" style={{ marginTop: 4 }}>
             Filter by date and type, newest first.
           </p>
@@ -73,7 +128,11 @@ export default async function HistoryPage({
         </Link>
       </div>
 
-      <HistoryFilters initialType={(type as any) ?? "all"} initialFrom={from} initialTo={to} />
+      <HistoryFilters
+        initialType={(type as any) ?? "all"}
+        initialFrom={from}
+        initialTo={to}
+      />
 
       <div style={{ display: "grid", gap: 12, marginTop: 16 }}>
         {items.map((item) => {
@@ -84,8 +143,17 @@ export default async function HistoryPage({
           });
           return (
             <div key={item.id} className="panel" style={{ padding: 16 }}>
-              <div style={{ display: "flex", justifyContent: "space-between", gap: 12, flexWrap: "wrap" }}>
-                <div style={{ display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap" }}>
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  gap: 12,
+                  flexWrap: "wrap",
+                }}
+              >
+                <div
+                  style={{ display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap" }}
+                >
                   <span className="badge">{item.type}</span>
                   <span className="muted">
                     <LocalTime value={item.createdAt.toISOString()} />
@@ -112,9 +180,18 @@ export default async function HistoryPage({
         )}
       </div>
 
-      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginTop: 18 }}>
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+          marginTop: 18,
+          flexWrap: "wrap",
+          gap: 10,
+        }}
+      >
         <span className="muted">
-          Page {page} / {totalPages} · {total} entries
+          Page {page} / {totalPages} - {total} entries
         </span>
         <div style={{ display: "flex", gap: 10 }}>
           <Link

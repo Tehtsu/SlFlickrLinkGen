@@ -39,7 +39,7 @@ export async function POST(request: Request) {
     } catch (error) {
       console.error("sendPasswordResetEmail failed", error);
       return NextResponse.json(
-        { error: "Email konnte nicht gesendet werden." },
+        { error: "Email could not be sent." },
         { status: 500 }
       );
     }

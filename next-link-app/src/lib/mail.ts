@@ -21,9 +21,9 @@ function getTransport() {
     auth:
       smtpUser && smtpPass
         ? {
-            user: smtpUser,
-            pass: smtpPass,
-          }
+          user: smtpUser,
+          pass: smtpPass,
+        }
         : undefined,
   });
 }
@@ -46,17 +46,19 @@ export async function sendPasswordResetEmail(
   await transporter.sendMail({
     from: smtpFrom,
     to: email,
-    subject: "Passwort zurücksetzen",
+    subject: "Link Generator for Flickr and SL - Reset Password",
     text: [
-      "Hallo,",
+      "Hello,",
       "",
-      "du hast ein Zurücksetzen deines Passworts angefordert.",
-      `Reset-Link: ${resetUrl}`,
+      "You have requested a password reset.",
+      `Reset link: ${resetUrl}`,
       "",
-      "Sollte der Link nicht funktionieren, nutze diesen Token in der App:",
+      "If the link does not work, use this token in the app:",
       token,
       "",
-      "Falls du die Anfrage nicht gestellt hast, kannst du diese Email ignorieren.",
+      "If you did not make the request, you can ignore this email.",
+      "",
+      "Questions? Contact stream@mrjyn.info",
     ].join("\n"),
   });
 }

@@ -1,9 +1,8 @@
 import Link from "next/link";
 import { getServerSession } from "next-auth";
 import { LinkGenerator } from "@/components/link-generator";
-import { AuthPanel } from "@/components/auth-panel";
 import { SignOutButton } from "@/components/sign-out-button";
-import { MobileAuthMenu } from "@/components/mobile-auth-menu";
+import { AuthModal } from "@/components/auth-modal";
 import { authOptions } from "@/lib/auth";
 
 export default async function Home() {
@@ -18,29 +17,32 @@ export default async function Home() {
       <header className="home__header">
         <div className="home__headline">
           <p className="badge">{variant} Generator</p>
-          <h1 className="home__title">Link builder with history</h1>
+          <h1 className="home__title">
+            Link builder with history
+          </h1>
           <p className="muted home__subtitle">
             Create Flickr or SecondLife links without login.
             Saving to history is available after login.
           </p>
         </div>
         <div className="home__actions">
-          <Link href="/history" className="btn">
-            History
-          </Link>
           {session?.user ? (
-            <div className="badge">
-              Signed in as {session.user.email}
-            </div>
+            <>
+              <Link href="/history" className="btn">
+                History
+              </Link>
+              <div className="badge">
+                Signed in as {session.user.name}
+              </div>
+            </>
           ) : (
-            <div className="badge">Not signed in</div>
+            <AuthModal
+              triggerLabel="Login / Register"
+              className="home__auth-trigger"
+            />
           )}
         </div>
       </header>
-      <MobileAuthMenu
-        isAuthenticated={Boolean(session?.user)}
-        email={session?.user?.email}
-      />
 
       <div className="home__grid">
         <LinkGenerator variant={variant} />
@@ -73,7 +75,10 @@ export default async function Home() {
                 Generate & copy without login. With login,
                 links go to your history.
               </p>
-              <AuthPanel />
+              <AuthModal
+                triggerLabel="Login / Register"
+                className="home__auth-trigger"
+              />
             </>
           )}
         </div>

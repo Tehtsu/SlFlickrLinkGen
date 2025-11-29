@@ -106,7 +106,7 @@ export function LinkGenerator({
         </label>
 
         <label style={{ display: "grid", gap: 6 }}>
-          <span className="muted">Typ</span>
+          <span className="muted">Type</span>
           <select
             className="input"
             value={type}

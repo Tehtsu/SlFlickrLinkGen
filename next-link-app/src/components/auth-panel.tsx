@@ -12,9 +12,7 @@ export function AuthPanel() {
   const [name, setName] = useState("");
   const [resetToken, setResetToken] = useState("");
   const [resetPassword, setResetPassword] = useState("");
-  const [message, setMessage] = useState<string | null>(
-    null
-  );
+  const [message, setMessage] = useState<string | null>(null);
   const [isPending, startTransition] = useTransition();
 
   const handleSignIn = () => {
@@ -56,11 +54,7 @@ export function AuthPanel() {
         return;
       }
       setMessage("Signed up. Logging you in...");
-      await signIn("credentials", {
-        email,
-        password,
-        redirect: false,
-      });
+      await signIn("credentials", { email, password, redirect: false });
       window.location.reload();
     });
   };
@@ -68,7 +62,7 @@ export function AuthPanel() {
   const handleForgot = () => {
     setMessage(null);
     if (!email.trim()) {
-      setMessage("Bitte Email eingeben.");
+      setMessage("Please enter an email.");
       return;
     }
     startTransition(async () => {
@@ -79,14 +73,11 @@ export function AuthPanel() {
       });
       const data = await res.json().catch(() => null);
       if (!res.ok) {
-        setMessage(
-          data?.error ??
-            "Reset konnte nicht ausgelöst werden."
-        );
+        setMessage(data?.error ?? "Could not trigger password reset.");
         return;
       }
       setMessage(
-        "Wenn die Email existiert, wurde ein Reset-Link per Email versendet."
+        "If the email exists, a reset link was sent."
       );
     });
   };
@@ -94,9 +85,7 @@ export function AuthPanel() {
   const handleReset = () => {
     setMessage(null);
     if (!resetToken.trim() || !resetPassword.trim()) {
-      setMessage(
-        "Token und neues Passwort sind erforderlich."
-      );
+      setMessage("Token and new password are required.");
       return;
     }
     if (resetPassword.length < 6) {
@@ -114,15 +103,10 @@ export function AuthPanel() {
       });
       const data = await res.json().catch(() => null);
       if (!res.ok) {
-        setMessage(
-          data?.error ??
-            "Passwort konnte nicht gesetzt werden."
-        );
+        setMessage(data?.error ?? "Password could not be updated.");
         return;
       }
-      setMessage(
-        "Passwort aktualisiert. Du kannst dich einloggen."
-      );
+      setMessage("Password updated. You can sign in now.");
       setMode("login");
       setPassword("");
       setResetPassword("");
@@ -137,82 +121,39 @@ export function AuthPanel() {
         padding: 24,
         maxWidth: 520,
         margin: "0 auto",
+        width: "100%",
       }}
     >
       <p className="badge" style={{ marginBottom: 10 }}>
-        {mode === "reset"
-          ? "Forgot password"
-          : "Login / Signup"}
+        {mode === "reset" ? "Forgot password" : "Login / Register"}
       </p>
-      <h1
-        style={{
-          fontSize: 28,
-          fontWeight: 700,
-          marginBottom: 6,
-        }}
-      >
-        {mode === "reset"
-          ? "Passwort zurücksetzen"
-          : "Welcome"}
+      <h1 style={{ fontSize: 28, fontWeight: 700, marginBottom: 6 }}>
+        {mode === "reset" ? "Reset password" : "Welcome"}
       </h1>
       <p className="muted" style={{ marginBottom: 16 }}>
         {mode === "reset"
-          ? "Fordere einen Reset-Token an und setze dein Passwort neu."
+          ? "Request a reset token and set a new password."
           : "Sign in or create an account to store your link history."}
       </p>
 
-      <div
-        style={{
-          display: "flex",
-          gap: 8,
-          marginBottom: 16,
-          flexWrap: "wrap",
-        }}
-      >
+      <div style={{ display: "flex", gap: 8, marginBottom: 16, flexWrap: "wrap" }}>
         <button
           className="btn"
-          style={{
-            background:
-              mode === "login" ? undefined : "transparent",
-            color:
-              mode === "login" ? "#0b1120" : "var(--text)",
-            border:
-              mode === "login"
-                ? "none"
-                : "1px solid var(--border)",
-          }}
+          style={{ background: mode === "login" ? undefined : "transparent", color: mode === "login" ? "#0b1120" : "var(--text)", border: mode === "login" ? "none" : "1px solid var(--border)" }}
           onClick={() => setMode("login")}
         >
           Login
         </button>
         <button
           className="btn"
-          style={{
-            background:
-              mode === "signup" ? undefined : "transparent",
-            color:
-              mode === "signup" ? "#0b1120" : "var(--text)",
-            border:
-              mode === "signup"
-                ? "none"
-                : "1px solid var(--border)",
-          }}
+          style={{ background: mode === "signup" ? undefined : "transparent", color: mode === "signup" ? "#0b1120" : "var(--text)", border: mode === "signup" ? "none" : "1px solid var(--border)" }}
           onClick={() => setMode("signup")}
         >
           Register
         </button>
         <button
           className="btn"
-          style={{
-            background:
-              mode === "reset" ? undefined : "transparent",
-            color:
-              mode === "reset" ? "#0b1120" : "var(--text)",
-            border:
-              mode === "reset"
-                ? "none"
-                : "1px solid var(--border)",
-          }}
+          style={{ background: mode === "reset" ? undefined : "transparent", color: mode === "reset" ? "#0b1120" : "var(--text)", border: mode === "reset" ? "none" : "1px solid var(--border)" }}
           onClick={() => setMode("reset")}
         >
           Forgot password
@@ -220,138 +161,60 @@ export function AuthPanel() {
       </div>
 
       {mode === "signup" && (
-        <label
-          style={{
-            display: "grid",
-            gap: 6,
-            marginBottom: 10,
-          }}
-        >
+        <label style={{ display: "grid", gap: 6, marginBottom: 10 }}>
           <span className="muted">Name</span>
-          <input
-            className="input"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            placeholder="Display Name"
-          />
+          <input className="input" value={name} onChange={(e) => setName(e.target.value)} placeholder="Display Name" />
         </label>
       )}
 
-      <label
-        style={{
-          display: "grid",
-          gap: 6,
-          marginBottom: 10,
-        }}
-      >
+      <label style={{ display: "grid", gap: 6, marginBottom: 10 }}>
         <span className="muted">Email</span>
-        <input
-          className="input"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          type="email"
-          placeholder="you@example.com"
-        />
+        <input className="input" value={email} onChange={(e) => setEmail(e.target.value)} type="email" placeholder="you@example.com" />
       </label>
 
       {mode !== "reset" && (
-        <label
-          style={{
-            display: "grid",
-            gap: 6,
-            marginBottom: 14,
-          }}
-        >
+        <label style={{ display: "grid", gap: 6, marginBottom: 14 }}>
           <span className="muted">Password</span>
-          <input
-            className="input"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            type="password"
-            placeholder="••••••"
-          />
+          <input className="input" value={password} onChange={(e) => setPassword(e.target.value)} type="password" placeholder="******" />
         </label>
       )}
 
       {mode === "reset" ? (
         <>
-          <div
-            style={{
-              display: "grid",
-              gap: 6,
-              marginBottom: 10,
-            }}
-          >
-            <button
-              className="btn"
-              onClick={handleForgot}
-              disabled={isPending}
-            >
-              {isPending
-                ? "Sende Reset..."
-                : "Reset anfordern"}
+          <div style={{ display: "grid", gap: 6, marginBottom: 10 }}>
+            <button className="btn" onClick={handleForgot} disabled={isPending}>
+              {isPending ? "Sending reset..." : "Request reset"}
             </button>
             <p className="muted" style={{ fontSize: 12 }}>
-              For security reasons, we always return the
-              same note. Token is stored here if available.
+              For security we return a generic message. Please paste the token from your email.
             </p>
           </div>
-          <label
-            style={{
-              display: "grid",
-              gap: 6,
-              marginBottom: 10,
-            }}
-          >
-            <span className="muted">Reset-Token</span>
+          <label style={{ display: "grid", gap: 6, marginBottom: 10 }}>
+            <span className="muted">Reset token</span>
             <input
               className="input"
               value={resetToken}
-              onChange={(e) =>
-                setResetToken(e.target.value)
-              }
-              placeholder="Token from email"
+              onChange={(e) => setResetToken(e.target.value)}
+              placeholder="Token from the email"
             />
           </label>
-          <label
-            style={{
-              display: "grid",
-              gap: 6,
-              marginBottom: 14,
-            }}
-          >
-            <span className="muted">New Password</span>
+          <label style={{ display: "grid", gap: 6, marginBottom: 14 }}>
+            <span className="muted">New password</span>
             <input
               className="input"
               value={resetPassword}
-              onChange={(e) =>
-                setResetPassword(e.target.value)
-              }
+              onChange={(e) => setResetPassword(e.target.value)}
               type="password"
-              placeholder="Neues Passwort"
+              placeholder="New password"
             />
           </label>
-          <button
-            className="btn"
-            onClick={handleReset}
-            disabled={isPending}
-          >
-            {isPending ? "Set..." : "Save password"}
+          <button className="btn" onClick={handleReset} disabled={isPending}>
+            {isPending ? "Saving..." : "Save password"}
           </button>
         </>
       ) : (
-        <button
-          className="btn"
-          onClick={
-            mode === "login" ? handleSignIn : handleSignUp
-          }
-          disabled={isPending}
-        >
-          {isPending
-            ? "Submitting..."
-            : mode === "login"
-            ? "Sign in"
-            : "Sign up"}
+        <button className="btn" onClick={mode === "login" ? handleSignIn : handleSignUp} disabled={isPending}>
+          {isPending ? "Submitting..." : mode === "login" ? "Sign in" : "Sign up"}
         </button>
       )}
 

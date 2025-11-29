@@ -19,7 +19,7 @@ export function MobileAuthMenu({
         className="btn mobile-auth__toggle"
         onClick={() => setOpen((value) => !value)}
       >
-        {isAuthenticated ? "Konto" : "Login / Registrieren"}
+        {isAuthenticated ? "Account" : "Login / Register"}
       </button>
 
       {open && (
