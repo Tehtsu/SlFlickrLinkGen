@@ -1,8 +1,10 @@
 import Link from "next/link";
 import { getServerSession } from "next-auth";
-import { LinkGenerator } from "@/components/link-generator";
 import { SignOutButton } from "@/components/sign-out-button";
 import { AuthModal } from "@/components/auth-modal";
+import { LinkToolsTabs } from "@/components/link-tools-tabs";
+import { AutoLogoutTimer } from "@/components/auto-logout-timer";
+import { DataManagement } from "@/components/data-management";
 import { authOptions } from "@/lib/auth";
 
 export default async function Home() {
@@ -31,8 +33,11 @@ export default async function Home() {
               <Link href="/history" className="btn">
                 History
               </Link>
-              <div className="badge">
-                Signed in as {session.user.name}
+              <div style={{ display: "grid", gap: 4 }}>
+                <div className="badge">
+                  Signed in as {session.user.name}
+                </div>
+                <AutoLogoutTimer />
               </div>
             </>
           ) : (
@@ -45,7 +50,7 @@ export default async function Home() {
       </header>
 
       <div className="home__grid">
-        <LinkGenerator variant={variant} />
+        <LinkToolsTabs variant={variant} />
         <div className="panel info-panel desktop-auth">
           {session?.user ? (
             <>
@@ -56,8 +61,14 @@ export default async function Home() {
               <p className="muted" style={{ marginTop: 6 }}>
                 View your history and filter by date/type.
               </p>
+              <div style={{ marginTop: 6 }}>
+                <AutoLogoutTimer />
+              </div>
               <div style={{ marginTop: 10 }}>
                 <SignOutButton />
+              </div>
+              <div style={{ marginTop: 10 }}>
+                <DataManagement />
               </div>
             </>
           ) : (

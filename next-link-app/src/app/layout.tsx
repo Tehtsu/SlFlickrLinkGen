@@ -39,7 +39,56 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased bg-slate-950 text-slate-100`}
         suppressHydrationWarning
       >
-        <Providers>{children}</Providers>
+        <Providers>
+          <div
+            style={{
+              minHeight: "100vh",
+              display: "flex",
+              flexDirection: "column",
+            }}
+          >
+            <div style={{ flex: "1 1 auto" }}>{children}</div>
+            <footer
+              style={{
+                padding: "16px 20px",
+                borderTop: "1px solid var(--border)",
+                background: "rgba(255,255,255,0.02)",
+                display: "flex",
+                flexWrap: "wrap",
+                gap: 10,
+                justifyContent: "space-between",
+              alignItems: "center",
+            }}
+          >
+              {(() => {
+                const year = new Date().getFullYear();
+                const label =
+                  year > 2025 ? `© 2025-${year} by ` : "© 2025 by ";
+                return (
+                  <span className="muted" style={{ fontSize: 12 }}>
+                    {label}
+                    <a
+                      href="https://tmlr.eu"
+                      target="_blank"
+                      rel="noreferrer"
+                      className="muted"
+                      style={{ textDecoration: "underline" }}
+                    >
+                      TMLR
+                    </a>
+                  </span>
+                );
+              })()}
+              <a
+                href="mailto:support@mrjyn.info"
+                className="muted"
+                style={{ fontSize: 12, textDecoration: "underline" }}
+              >
+                support@mrjyn.info
+              </a>
+            </footer>
+          </div>
+        </Providers>
       </body>
     </html>
   );

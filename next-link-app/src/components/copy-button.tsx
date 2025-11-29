@@ -13,7 +13,7 @@ export function CopyButton({ text }: { text: string }) {
 
   return (
     <button className="btn" onClick={handleCopy}>
-      {copied ? "Kopiert!" : "Kopieren"}
+      {copied ? "Copied!" : "Copy"}
     </button>
   );
 }

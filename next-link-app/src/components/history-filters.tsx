@@ -3,22 +3,25 @@
 import { useRouter, useSearchParams } from "next/navigation";
 import { useState, useTransition } from "react";
 
-type LinkType = "flickr" | "secondlife" | "all";
+type LinkType = "flickr" | "secondlife" | "short" | "all";
 
 export function HistoryFilters({
   initialType,
   initialFrom,
   initialTo,
+  initialPageSize = 10,
 }: {
   initialType: LinkType;
   initialFrom?: string;
   initialTo?: string;
+  initialPageSize?: number;
 }) {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [type, setType] = useState<LinkType>(initialType);
   const [from, setFrom] = useState(initialFrom ?? "");
   const [to, setTo] = useState(initialTo ?? "");
+  const [pageSize, setPageSize] = useState<number>(initialPageSize);
   const [isPending, startTransition] = useTransition();
 
   const applyFilters = () => {
@@ -32,6 +35,7 @@ export function HistoryFilters({
     else params.delete("from");
     if (to) params.set("to", to);
     else params.delete("to");
+    if (pageSize) params.set("pageSize", String(pageSize));
     params.set("page", "1");
 
     startTransition(() => {
@@ -43,6 +47,7 @@ export function HistoryFilters({
     setType("all");
     setFrom("");
     setTo("");
+    setPageSize(initialPageSize);
     startTransition(() => {
       router.push("/history");
     });
@@ -61,6 +66,7 @@ export function HistoryFilters({
               <option value="all">All</option>
               <option value="flickr">Flickr</option>
               <option value="secondlife">SecondLife</option>
+              <option value="short">Short links</option>
             </select>
           </label>
           <label style={{ display: "grid", gap: 4 }}>
@@ -70,6 +76,20 @@ export function HistoryFilters({
           <label style={{ display: "grid", gap: 4 }}>
             <span className="muted">To</span>
             <input className="input" type="date" value={to} onChange={(e) => setTo(e.target.value)} />
+          </label>
+          <label style={{ display: "grid", gap: 4 }}>
+            <span className="muted">Per page</span>
+            <select
+              className="input"
+              value={pageSize}
+              onChange={(e) => setPageSize(Number(e.target.value))}
+            >
+              {[1, 3, 5, 10, 25].map((size) => (
+                <option key={size} value={size}>
+                  {size}
+                </option>
+              ))}
+            </select>
           </label>
         </div>
       </div>

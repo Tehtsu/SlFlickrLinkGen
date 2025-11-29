@@ -16,6 +16,7 @@ model User {
   passwordHash   String?
   createdAt      DateTime  @default(now())
   links          Link[]
+  shortLinks     ShortLink[]
   sessions       Session[]
   accounts       Account[]
   authenticators Authenticator[]
@@ -85,4 +86,13 @@ model Authenticator {
 enum LinkType {
   flickr
   secondlife
+}
+
+model ShortLink {
+  id        String   @id @default(cuid())
+  slug      String   @unique
+  targetUrl String
+  createdAt DateTime @default(now())
+  user      User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+  userId    String?
 }

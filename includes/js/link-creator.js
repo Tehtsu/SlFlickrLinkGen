@@ -65,10 +65,10 @@ copyButton.addEventListener("click", function () {
 
   navigator.clipboard.writeText(textToCopy).then(
     () => {
-      showError("Code wurde kopiert!", 2000); // Zeige Erfolgsmeldung
+      showError("Code has been copied!", 2000); // Zeige Erfolgsmeldung
     },
     (err) => {
-      showError("Fehler beim Kopieren: " + err);
+      showError("Error while copying: " + err);
     }
   );
 });

@@ -9,6 +9,8 @@ export const authOptions: NextAuthOptions = {
   secret: process.env.NEXTAUTH_SECRET,
   session: {
     strategy: "jwt",
+    maxAge: 60 * 60 * 2, // 2h max lifetime (approximate session-only)
+    updateAge: 0, // no sliding extension; forces re-auth after maxAge or browser restart
   },
   providers: [
     CredentialsProvider({
