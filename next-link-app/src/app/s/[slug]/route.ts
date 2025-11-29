@@ -1,16 +1,17 @@
-import { NextResponse } from "next/server";
+import { NextResponse, type NextRequest } from "next/server";
 import { prisma } from "@/lib/prisma";
 
 export async function GET(
-  _request: Request,
-  { params }: { params: { slug: string } }
+  _request: NextRequest,
+  { params }: { params: Promise<{ slug: string }> }
 ) {
-  const slug = params.slug?.toLowerCase();
-  if (!slug) {
+  const { slug } = await params;
+  const normalized = slug?.toLowerCase();
+  if (!normalized) {
     return NextResponse.json({ error: "Not found" }, { status: 404 });
   }
 
-  const record = await prisma.shortLink.findUnique({ where: { slug } });
+  const record = await prisma.shortLink.findUnique({ where: { slug: normalized } });
   if (!record) {
     return NextResponse.json({ error: "Not found" }, { status: 404 });
   }
