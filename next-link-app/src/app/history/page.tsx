@@ -1,10 +1,10 @@
-import { format } from "date-fns";
 import Link from "next/link";
 import { getServerSession } from "next-auth";
 import { AuthPanel } from "@/components/auth-panel";
 import { CopyButton } from "@/components/copy-button";
 import { HistoryFilters } from "@/components/history-filters";
 import { buildLink } from "@/lib/link-generator";
+import { LocalTime } from "@/components/local-time";
 import { prisma } from "@/lib/prisma";
 import { authOptions } from "@/lib/auth";
 
@@ -87,7 +87,9 @@ export default async function HistoryPage({
               <div style={{ display: "flex", justifyContent: "space-between", gap: 12, flexWrap: "wrap" }}>
                 <div style={{ display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap" }}>
                   <span className="badge">{item.type}</span>
-                  <span className="muted">{format(item.createdAt, "dd.MM.yyyy HH:mm")}</span>
+                  <span className="muted">
+                    <LocalTime value={item.createdAt.toISOString()} />
+                  </span>
                 </div>
                 <CopyButton text={html} />
               </div>
