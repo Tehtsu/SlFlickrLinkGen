@@ -228,6 +228,7 @@ export default async function HistoryPage({
       </div>
 
       <HistoryFilters
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         initialType={(type as any) ?? "all"}
         initialFrom={from}
         initialTo={to}
