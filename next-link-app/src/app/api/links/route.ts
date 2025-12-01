@@ -3,6 +3,7 @@ import { getServerSession } from "next-auth";
 import { buildLink, linkInputSchema } from "@/lib/link-generator";
 import { prisma } from "@/lib/prisma";
 import { authOptions } from "@/lib/auth";
+import { incrementTotalLinks } from "@/lib/stats";
 
 export async function POST(request: Request) {
   const body = await request.json().catch(() => null);
@@ -12,6 +13,10 @@ export async function POST(request: Request) {
   }
 
   const html = buildLink(parsed.data);
+
+  await incrementTotalLinks().catch((error) => {
+    console.error("Failed to bump total links", error);
+  });
 
   const session = await getServerSession(authOptions);
   if (!session?.user?.id) {

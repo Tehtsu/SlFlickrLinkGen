@@ -10,6 +10,13 @@ export function LinkShortener() {
   const [message, setMessage] = useState<string | null>(null);
   const [isPending, startTransition] = useTransition();
 
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      handleSubmit();
+    }
+  };
+
   const handleSubmit = () => {
     setMessage(null);
     setResult(null);
@@ -46,6 +53,7 @@ export function LinkShortener() {
             onChange={(e) => setUrl(e.target.value)}
             placeholder="https://example.com/page"
             type="url"
+            onKeyDown={handleKeyDown}
           />
         </label>
         <label style={{ display: "grid", gap: 6 }}>
@@ -55,6 +63,7 @@ export function LinkShortener() {
             value={slug}
             onChange={(e) => setSlug(e.target.value)}
             placeholder="my-link"
+            onKeyDown={handleKeyDown}
           />
         </label>
         <button className="btn" onClick={handleSubmit} disabled={isPending}>

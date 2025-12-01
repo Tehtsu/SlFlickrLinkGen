@@ -288,3 +288,18 @@ select {
     display: block;
   }
 }
+
+/* Header navigation hover/active */
+.nav-link {
+  transition: background 0.2s ease, color 0.2s ease, transform 0.15s ease;
+}
+
+.nav-link:hover {
+  background: linear-gradient(
+    120deg,
+    rgba(255, 255, 255, 0.14),
+    rgba(255, 255, 255, 0.08)
+  );
+  color: #0b1120;
+  transform: translateY(-1px);
+}

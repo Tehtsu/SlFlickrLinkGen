@@ -3,6 +3,7 @@ import { z } from "zod";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
+import { incrementTotalShortLinks } from "@/lib/stats";
 
 const bodySchema = z.object({
   url: z.string().url(),
@@ -53,6 +54,10 @@ export async function POST(request: Request) {
       targetUrl: parsed.data.url,
       userId: session?.user?.id ?? null,
     },
+  });
+
+  await incrementTotalShortLinks().catch((error) => {
+    console.error("Failed to bump total short links", error);
   });
 
   const baseUrl =

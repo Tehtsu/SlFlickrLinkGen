@@ -1,11 +1,9 @@
 import Link from "next/link";
 import { getServerSession } from "next-auth";
-import { SignOutButton } from "@/components/sign-out-button";
 import { AuthModal } from "@/components/auth-modal";
-import { LinkToolsTabs } from "@/components/link-tools-tabs";
 import { AutoLogoutTimer } from "@/components/auto-logout-timer";
-import { DataManagement } from "@/components/data-management";
 import { authOptions } from "@/lib/auth";
+import { LinkGenerator } from "@/components/link-generator";
 
 export default async function Home() {
   const session = await getServerSession(authOptions);
@@ -13,6 +11,7 @@ export default async function Home() {
     process.env.APP_VARIANT?.toLowerCase() === "secondlife"
       ? "SecondLife"
       : "FlickR and SecondLife Link";
+  const isAdmin = session?.user?.role === "ADMIN";
 
   return (
     <main className="home">
@@ -30,15 +29,7 @@ export default async function Home() {
         <div className="home__actions">
           {session?.user ? (
             <>
-              <Link href="/history" className="btn">
-                History
-              </Link>
-              <div style={{ display: "grid", gap: 4 }}>
-                <div className="badge">
-                  Signed in as {session.user.name}
-                </div>
-                <AutoLogoutTimer />
-              </div>
+              <AutoLogoutTimer />
             </>
           ) : (
             <AuthModal
@@ -50,25 +41,30 @@ export default async function Home() {
       </header>
 
       <div className="home__grid">
-        <LinkToolsTabs variant={variant} />
+        <div
+          id="generator"
+          className="panel"
+          style={{ padding: 12, width: "100%" }}
+        >
+          <p className="badge">Link generator</p>
+          <div style={{ marginTop: 10 }}>
+            <LinkGenerator variant={variant} />
+          </div>
+        </div>
         <div className="panel info-panel desktop-auth">
           {session?.user ? (
             <>
               <p className="badge">Signed in</p>
               <p style={{ marginTop: 10, fontWeight: 600 }}>
-                Your links will be saved.
+                Du bist eingeloggt.
               </p>
               <p className="muted" style={{ marginTop: 6 }}>
-                View your history and filter by date/type.
+                Profil und alle Aktionen findest du auf der Profile-Seite.
               </p>
-              <div style={{ marginTop: 6 }}>
-                <AutoLogoutTimer />
-              </div>
               <div style={{ marginTop: 10 }}>
-                <SignOutButton />
-              </div>
-              <div style={{ marginTop: 10 }}>
-                <DataManagement />
+                <Link href="/profile" className="btn">
+                  Zum Profil
+                </Link>
               </div>
             </>
           ) : (

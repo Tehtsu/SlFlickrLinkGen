@@ -63,6 +63,13 @@ export function LinkGenerator({
     setMessage("Code has been copied!");
   };
 
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement | HTMLSelectElement>) => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      handleSubmit();
+    }
+  };
+
   return (
     <div className="panel generator-panel">
       <div className="generator-heading">
@@ -92,6 +99,7 @@ export function LinkGenerator({
             value={url}
             onChange={(e) => setUrl(e.target.value)}
             type="url"
+            onKeyDown={handleKeyDown}
           />
         </label>
 
@@ -102,6 +110,7 @@ export function LinkGenerator({
             placeholder="Title or text"
             value={title}
             onChange={(e) => setTitle(e.target.value)}
+            onKeyDown={handleKeyDown}
           />
         </label>
 
@@ -113,6 +122,7 @@ export function LinkGenerator({
             onChange={(e) =>
               setType(e.target.value as LinkType)
             }
+            onKeyDown={handleKeyDown}
           >
             <option value="flickr">
               Flickr (&lt;a&gt;-Tag)

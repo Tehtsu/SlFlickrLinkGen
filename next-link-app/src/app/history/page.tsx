@@ -8,6 +8,7 @@ import { LocalTime } from "@/components/local-time";
 import { prisma } from "@/lib/prisma";
 import { authOptions } from "@/lib/auth";
 import { DeleteEntryButton } from "@/components/delete-entry-button";
+import { getGlobalStats } from "@/lib/stats";
 
 const PAGE_SIZE = 10;
 const PAGE_SIZE_OPTIONS = [1, 3, 5, 10, 25];
@@ -22,8 +23,10 @@ export default async function HistoryPage({
     [key: string]: string | string[] | undefined;
   }>;
 }) {
+  const globalStatsPromise = getGlobalStats();
   const session = await getServerSession(authOptions);
   if (!session?.user?.id) {
+    const globalStats = await globalStatsPromise;
     return (
       <main
         style={{
@@ -66,6 +69,18 @@ export default async function HistoryPage({
         </div>
         <div style={{ maxWidth: 520 }}>
           <AuthModal triggerLabel="Login / Register" />
+        </div>
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            marginTop: 16,
+          }}
+        >
+          <span className="muted">
+            Total links: {globalStats.totalLinks} | Short links:{" "}
+            {globalStats.totalShortLinks}
+          </span>
         </div>
       </main>
     );
@@ -139,14 +154,16 @@ export default async function HistoryPage({
           orderBy: { createdAt: "desc" },
         }),
   ]);
+  const globalStats = await globalStatsPromise;
 
   const baseUrl =
     process.env.NEXTAUTH_URL ||
     process.env.NEXT_PUBLIC_APP_URL ||
-    "http://localhost:3000";
+    "http://linkgen.mrjyn.info";
 
   const combined = [
-    ...links.map((item) => ({
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    ...links.map((item: any) => ({
       kind: "link" as const,
       id: item.id,
       createdAt: item.createdAt,
@@ -154,7 +171,8 @@ export default async function HistoryPage({
       url: item.url,
       title: item.title,
     })),
-    ...shortLinks.map((item) => ({
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    ...shortLinks.map((item: any) => ({
       kind: "short" as const,
       id: item.id,
       createdAt: item.createdAt,
@@ -175,6 +193,8 @@ export default async function HistoryPage({
     (page - 1) * pageSize,
     page * pageSize
   );
+  const totalLinkCount = globalStats.totalLinks;
+  const totalShortLinkCount = globalStats.totalShortLinks;
 
   const createPageLink = (targetPage: number) => {
     const params = new URLSearchParams();
@@ -412,6 +432,13 @@ export default async function HistoryPage({
       >
         <span className="muted">
           Page {page} / {totalPages} - {total} entries
+        </span>
+        <span
+          className="muted"
+          style={{ flex: 1, textAlign: "center" }}
+        >
+          Total links: {totalLinkCount} | Short links:{" "}
+          {totalShortLinkCount}
         </span>
         <div style={{ display: "flex", gap: 10 }}>
           <Link

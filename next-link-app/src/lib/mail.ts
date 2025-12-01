@@ -62,3 +62,26 @@ export async function sendPasswordResetEmail(
     ].join("\n"),
   });
 }
+
+export async function sendAdminSetPasswordEmail(
+  email: string,
+  password: string
+) {
+  const transporter = getTransport();
+  await transporter.sendMail({
+    from: smtpFrom,
+    to: email,
+    subject:
+      "Link Generator for Flickr and SL - Your temporary password",
+    text: [
+      "Hello,",
+      "",
+      "Your password has been reset by an administrator.",
+      `New temporary password: ${password}`,
+      "",
+      "Please log in and change the password to your own immediately.",
+      "",
+      "If you have any questions, please contact support.: support@mrjyn.info",
+    ].join("\n"),
+  });
+}
