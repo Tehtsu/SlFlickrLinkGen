@@ -11,7 +11,6 @@ export default async function Home() {
     process.env.APP_VARIANT?.toLowerCase() === "secondlife"
       ? "SecondLife"
       : "FlickR and SecondLife Link";
-  const isAdmin = session?.user?.role === "ADMIN";
 
   return (
     <main className="home">
@@ -59,7 +58,8 @@ export default async function Home() {
                 Du bist eingeloggt.
               </p>
               <p className="muted" style={{ marginTop: 6 }}>
-                Profil und alle Aktionen findest du auf der Profile-Seite.
+                Profil und alle Aktionen findest du auf der
+                Profile-Seite.
               </p>
               <div style={{ marginTop: 10 }}>
                 <Link href="/profile" className="btn">
