@@ -3,7 +3,8 @@ import { authOptions } from "./auth";
 
 export async function requireAdminSession() {
   const session = await getServerSession(authOptions);
-  if (!session?.user?.id || session.user.role !== "ADMIN") {
+  const user = session?.user as { id?: string; role?: string } | undefined;
+  if (!user?.id || user.role !== "ADMIN") {
     throw new Error("Not authorized");
   }
   return session;
