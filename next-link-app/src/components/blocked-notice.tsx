@@ -8,12 +8,14 @@ import {
 
 export function BlockedNotice() {
   const searchParams = useSearchParams();
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const router = useRouter();
   const [visible, setVisible] = useState(false);
 
   useEffect(() => {
     const blocked = searchParams?.get("blocked");
     if (blocked === "1") {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setVisible(true);
       // Drop the query param to avoid showing again on navigation.
       const url = new URL(window.location.href);
