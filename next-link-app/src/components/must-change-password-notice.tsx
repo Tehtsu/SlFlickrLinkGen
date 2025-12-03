@@ -24,10 +24,15 @@ export function MustChangePasswordNotice({
       }}
     >
       <span>
-        Dein Passwort wurde vom Admin gesetzt. Bitte ändere es jetzt.
+        Your password was set by the administrator. Please
+        change it now.
       </span>
-      <Link href="/profile" className="btn" style={{ padding: "6px 10px" }}>
-        Passwort ändern
+      <Link
+        href="/profile"
+        className="btn"
+        style={{ padding: "6px 10px" }}
+      >
+        Change password
       </Link>
     </div>
   );
