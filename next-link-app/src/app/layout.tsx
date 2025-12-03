@@ -38,10 +38,18 @@ export default async function RootLayout({
 }>) {
   const globalStats = await getGlobalStats();
   const session = await getServerSession(authOptions);
-  const isAdmin = session?.user?.role === "ADMIN";
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const mustChangePassword = (session?.user as any)
-    ?.mustChangePassword;
+  const user = session?.user as
+    | {
+        id?: string;
+        name?: string | null;
+        email?: string | null;
+        role?: string;
+        status?: string;
+        mustChangePassword?: boolean;
+      }
+    | undefined;
+  const isAdmin = user?.role === "ADMIN";
+  const mustChangePassword = user?.mustChangePassword;
 
   const year = new Date().getFullYear();
   const label =
@@ -67,12 +75,12 @@ export default async function RootLayout({
           >
             <SiteHeader
               title={title}
-              isAuthenticated={Boolean(session?.user?.id)}
+              isAuthenticated={Boolean(user?.id)}
               isAdmin={isAdmin}
-              userName={session?.user?.name ?? undefined}
+              userName={user?.name ?? undefined}
               userRole={
-                isAdmin && session?.user?.role
-                  ? session.user.role.toLowerCase()
+                isAdmin && user?.role
+                  ? user.role.toLowerCase()
                   : undefined
               }
             />
@@ -81,7 +89,7 @@ export default async function RootLayout({
             />
             <BlockedNotice />
             <BlockedWatcher
-              status={session?.user?.status}
+              status={user?.status}
             />
             <div style={{ flex: "1 1 auto" }}>
               {children}
