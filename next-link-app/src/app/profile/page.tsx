@@ -1,4 +1,3 @@
-import Link from "next/link";
 import { redirect } from "next/navigation";
 import { getServerSession } from "next-auth";
 import { SignOutButton } from "@/components/sign-out-button";
@@ -13,7 +12,9 @@ export default async function ProfilePage() {
     return redirect("/");
   }
 
-  const isAdmin = session.user.role === "ADMIN";
+  const isAdmin =
+    (session?.user as { role?: string } | undefined)
+      ?.role === "ADMIN";
 
   return (
     <main

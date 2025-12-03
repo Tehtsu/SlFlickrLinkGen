@@ -18,7 +18,8 @@ function formatDate(date: Date) {
 
 export default async function AdminPage() {
   const session = await getServerSession(authOptions);
-  if (!session?.user?.id || session.user.role !== "ADMIN") {
+  const isAdmin = (session?.user as { role?: string } | undefined)?.role === "ADMIN";
+  if (!session?.user?.id || !isAdmin) {
     return redirect("/");
   }
 
