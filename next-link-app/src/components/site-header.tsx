@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { signOut } from "next-auth/react";
+import { useState } from "react";
 
 type Props = {
   title: string;
@@ -20,12 +21,29 @@ export function SiteHeader({
   userRole,
 }: Props) {
   const pathname = usePathname();
+  const [showSeasonal] = useState(() => {
+    const now = new Date();
+    const month = now.getMonth(); // 0 Jan
+    const day = now.getDate();
+    // Show from 1 Dec through 5 Jan (aligned with snow season)
+    const inDecember = month === 11 && day >= 15;
+    const inJanuary = month === 0 && day <= 5;
+    return inDecember || inJanuary;
+  });
 
   const navItems = [
     { href: "/", label: "Generator", show: true },
     { href: "/shortener", label: "Shortener", show: true },
-    { href: "/history", label: "History", show: isAuthenticated },
-    { href: "/profile", label: "Profile", show: isAuthenticated },
+    {
+      href: "/history",
+      label: "History",
+      show: isAuthenticated,
+    },
+    {
+      href: "/profile",
+      label: "Profile",
+      show: isAuthenticated,
+    },
     { href: "/admin", label: "Admin", show: isAdmin },
   ].filter((item) => item.show);
 
@@ -44,54 +62,85 @@ export function SiteHeader({
         alignItems: "center",
         gap: 14,
         flexWrap: "wrap",
-        justifyContent: "space-between",
+        justifyContent: "center",
       }}
     >
-      <div
+      <Link
+        href="/"
+        className="btn"
+        style={{
+          textDecoration: "none",
+          padding: "8px 12px",
+        }}
+      >
+        {title}
+      </Link>
+
+      {showSeasonal && (
+        <div
+          style={{
+            minWidth: 260,
+            maxWidth: 480,
+            flex: "0 1 auto",
+            display: "flex",
+            justifyContent: "center",
+            overflow: "hidden",
+            padding: "4px 0",
+          }}
+        >
+          <div
+            style={{
+              whiteSpace: "nowrap",
+              display: "inline-block",
+              animation: "marquee 12s linear infinite",
+              color: "rgba(255,255,255,0.9)",
+              fontSize: 14,
+            }}
+          >
+            Merry Christmas & Happy New Year · Merry
+            Christmas & Happy New Year · Merry Christmas &
+            Happy New Year
+          </div>
+          <style jsx>{`
+            @keyframes marquee {
+              0% {
+                transform: translateX(0);
+              }
+              100% {
+                transform: translateX(-50%);
+              }
+            }
+          `}</style>
+        </div>
+      )}
+
+      <nav
         style={{
           display: "flex",
-          alignItems: "center",
-          gap: 10,
+          gap: 8,
           flexWrap: "wrap",
         }}
       >
-        <Link
-          href="/"
-          className="btn"
-          style={{
-            textDecoration: "none",
-            padding: "8px 12px",
-          }}
-        >
-          {title}
-        </Link>
-        <nav
-          style={{
-            display: "flex",
-            gap: 8,
-            flexWrap: "wrap",
-          }}
-        >
-          {navItems.map((item) => (
-            <Link
-              key={item.href}
-              href={item.href}
-              className="badge nav-link"
-              style={
-                isActive(item.href)
-                  ? {
-                      background:
-                        "linear-gradient(120deg, rgba(255,255,255,0.15), rgba(255,255,255,0.08))",
-                      color: "#0b1120",
-                    }
-                  : undefined
-              }
-            >
-              {item.label}
-            </Link>
-          ))}
-        </nav>
-      </div>
+        {navItems.map((item) => (
+          <Link
+            key={item.href}
+            href={item.href}
+            className="badge nav-link"
+            style={
+              isActive(item.href)
+                ? {
+                    background:
+                      "linear-gradient(120deg, rgba(255,255,255,0.15), rgba(255,255,255,0.08))",
+                    color: "#0b1120",
+                  }
+                : undefined
+            }
+          >
+            {item.label}
+          </Link>
+        ))}
+      </nav>
+
       {isAuthenticated && (
         <div
           style={{
@@ -100,12 +149,21 @@ export function SiteHeader({
             gap: 10,
           }}
         >
-          <div style={{ display: "grid", gap: 2, textAlign: "right" }}>
+          <div
+            style={{
+              display: "grid",
+              gap: 2,
+              textAlign: "right",
+            }}
+          >
             <span className="badge">
               Signed in as {userName ?? "User"}
             </span>
             {isAdmin && userRole && (
-              <span className="muted" style={{ fontSize: 12 }}>
+              <span
+                className="muted"
+                style={{ fontSize: 12 }}
+              >
                 Role: {userRole}
               </span>
             )}
@@ -124,18 +182,20 @@ export function SiteHeader({
               alignItems: "center",
               justifyContent: "center",
               cursor: "pointer",
-              transition: "background 0.2s ease, transform 0.15s ease",
+              transition:
+                "background 0.2s ease, transform 0.15s ease",
             }}
             onMouseEnter={(e) => {
-              (e.currentTarget as HTMLButtonElement).style.background =
-                "rgba(255,255,255,0.12)";
+              (
+                e.currentTarget as HTMLButtonElement
+              ).style.background = "rgba(255,255,255,0.12)";
             }}
             onMouseLeave={(e) => {
-              (e.currentTarget as HTMLButtonElement).style.background =
-                "rgba(255,255,255,0.06)";
+              (
+                e.currentTarget as HTMLButtonElement
+              ).style.background = "rgba(255,255,255,0.06)";
             }}
           >
-            {/* simple power icon */}
             <svg
               width="18"
               height="18"

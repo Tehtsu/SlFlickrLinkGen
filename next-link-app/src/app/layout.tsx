@@ -9,6 +9,7 @@ import { SiteHeader } from "@/components/site-header";
 import { BlockedWatcher } from "@/components/blocked-watcher";
 import { BlockedNotice } from "@/components/blocked-notice";
 import { MustChangePasswordNotice } from "@/components/must-change-password-notice";
+import { SnowEffect } from "@/components/snow-effect";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -73,6 +74,7 @@ export default async function RootLayout({
               flexDirection: "column",
             }}
           >
+            <SnowEffect />
             <SiteHeader
               title={title}
               isAuthenticated={Boolean(user?.id)}

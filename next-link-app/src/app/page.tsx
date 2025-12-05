@@ -55,15 +55,15 @@ export default async function Home() {
             <>
               <p className="badge">Signed in</p>
               <p style={{ marginTop: 10, fontWeight: 600 }}>
-                Du bist eingeloggt.
+                You are logged in.
               </p>
               <p className="muted" style={{ marginTop: 6 }}>
-                Profil und alle Aktionen findest du auf der
-                Profile-Seite.
+                You can find your profile and all your
+                actions on the Profile page.
               </p>
               <div style={{ marginTop: 10 }}>
                 <Link href="/profile" className="btn">
-                  Zum Profil
+                  To the profile
                 </Link>
               </div>
             </>
