@@ -59,7 +59,7 @@ export default async function ProfilePage() {
           }}
         >
           <AutoLogoutTimer />
-          <SignOutButton />
+          {/* <SignOutButton /> */}
         </div>
       </div>
 

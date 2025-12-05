@@ -33,9 +33,9 @@ export function MobileAuthMenu({
               <p className="muted" style={{ marginTop: 6 }}>
                 Your links are saved to history.
               </p>
-              <div style={{ marginTop: 10 }}>
+              {/* <div style={{ marginTop: 10 }}>
                 <SignOutButton />
-              </div>
+              </div> */}
             </div>
           ) : (
             <AuthPanel />

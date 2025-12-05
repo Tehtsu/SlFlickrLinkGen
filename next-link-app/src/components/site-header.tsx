@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { signOut } from "next-auth/react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 type Props = {
   title: string;
@@ -47,6 +47,12 @@ export function SiteHeader({
     { href: "/admin", label: "Admin", show: isAdmin },
   ].filter((item) => item.show);
 
+  const [mobileNavOpen, setMobileNavOpen] = useState(false);
+
+  useEffect(() => {
+    setMobileNavOpen(false);
+  }, [pathname]);
+
   const isActive = (href: string) => {
     if (href === "/") return pathname === "/";
     return pathname?.startsWith(href);
@@ -76,6 +82,30 @@ export function SiteHeader({
         {title}
       </Link>
 
+      <button
+        className="nav-toggle"
+        aria-expanded={mobileNavOpen}
+        aria-label="Navigation umschalten"
+        onClick={() => setMobileNavOpen((prev) => !prev)}
+        type="button"
+      >
+        <svg
+          width="18"
+          height="18"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          aria-hidden="true"
+        >
+          <line x1="4" y1="6" x2="20" y2="6" />
+          <line x1="4" y1="12" x2="20" y2="12" />
+          <line x1="4" y1="18" x2="20" y2="18" />
+        </svg>
+      </button>
+
       {showSeasonal && (
         <div
           style={{
@@ -97,8 +127,8 @@ export function SiteHeader({
               fontSize: 14,
             }}
           >
-            Merry Christmas & Happy New Year · Merry
-            Christmas & Happy New Year · Merry Christmas &
+            Merry Christmas & Happy New Year | Merry
+            Christmas & Happy New Year | Merry Christmas &
             Happy New Year
           </div>
           <style jsx>{`
@@ -115,17 +145,16 @@ export function SiteHeader({
       )}
 
       <nav
-        style={{
-          display: "flex",
-          gap: 8,
-          flexWrap: "wrap",
-        }}
+        className={`site-nav ${
+          mobileNavOpen ? "site-nav--open" : ""
+        }`}
       >
         {navItems.map((item) => (
           <Link
             key={item.href}
             href={item.href}
             className="badge nav-link"
+            onClick={() => setMobileNavOpen(false)}
             style={
               isActive(item.href)
                 ? {
@@ -143,19 +172,11 @@ export function SiteHeader({
 
       {isAuthenticated && (
         <div
-          style={{
-            display: "flex",
-            alignItems: "center",
-            gap: 10,
-          }}
+          className={`site-user ${
+            mobileNavOpen ? "site-nav--open" : ""
+          }`}
         >
-          <div
-            style={{
-              display: "grid",
-              gap: 2,
-              textAlign: "right",
-            }}
-          >
+          <div className="site-user__meta">
             <span className="badge">
               Signed in as {userName ?? "User"}
             </span>

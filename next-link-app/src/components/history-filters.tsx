@@ -93,7 +93,7 @@ export function HistoryFilters({
           </label>
         </div>
       </div>
-      <div style={{ display: "flex", gap: 10 }}>
+      <div className="filters-actions">
         <button className="btn" onClick={applyFilters} disabled={isPending}>
           {isPending ? "Loading..." : "Apply filters"}
         </button>

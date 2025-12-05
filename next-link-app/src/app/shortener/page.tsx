@@ -10,7 +10,7 @@ export default async function ShortenerPage() {
 
   return (
     <main className="home">
-      <header className="home__header">
+      <header className="home__header section-header">
         <div className="home__headline">
           <p className="badge">Link shortener</p>
           <h1 className="home__title">Shorten any URL</h1>
@@ -18,7 +18,7 @@ export default async function ShortenerPage() {
             Erstelle kurze Slugs, optional mit Login.
           </p>
         </div>
-        <div className="home__actions">
+        <div className="home__actions section-actions">
           {session?.user ? (
             <>
               <Link href="/history" className="btn">

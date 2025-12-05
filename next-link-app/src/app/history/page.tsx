@@ -36,11 +36,8 @@ export default async function HistoryPage({
         }}
       >
         <div
+          className="section-header"
           style={{
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "center",
-            gap: 12,
             marginBottom: 18,
           }}
         >
@@ -59,13 +56,15 @@ export default async function HistoryPage({
               Please sign in to view your history.
             </p>
           </div>
-          <Link
-            href="/"
-            className="btn"
-            style={{ textDecoration: "none" }}
-          >
-            Back to generator
-          </Link>
+          <div className="section-actions">
+            <Link
+              href="/"
+              className="btn"
+              style={{ textDecoration: "none" }}
+            >
+              Back to generator
+            </Link>
+          </div>
         </div>
         <div style={{ maxWidth: 520 }}>
           <AuthModal triggerLabel="Login / Register" />
@@ -215,11 +214,8 @@ export default async function HistoryPage({
       }}
     >
       <div
+        className="section-header"
         style={{
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-          gap: 12,
           marginBottom: 14,
         }}
       >
@@ -238,13 +234,15 @@ export default async function HistoryPage({
             Filter by date and type, newest first.
           </p>
         </div>
-        <Link
-          href="/"
-          className="btn"
-          style={{ textDecoration: "none" }}
-        >
-          Back to generator
-        </Link>
+        <div className="section-actions">
+          <Link
+            href="/"
+            className="btn"
+            style={{ textDecoration: "none" }}
+          >
+            Back to generator
+          </Link>
+        </div>
       </div>
 
       <HistoryFilters
