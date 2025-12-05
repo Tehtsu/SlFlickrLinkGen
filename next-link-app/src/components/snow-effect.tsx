@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useState } from "react";
 
 type Flake = {
   id: number;
@@ -17,21 +17,15 @@ type Flake = {
 function isSnowSeason(now: Date) {
   const month = now.getMonth(); // 0 = Jan, 11 = Dec
   const day = now.getDate();
-  // From 1 Dec through 1 Jan inclusive
-  return (month === 11 && day >= 1) || (month === 0 && day <= 1);
+  // From 1 Dec through 5 Jan inclusive
+  return (
+    (month === 11 && day >= 1) || (month === 0 && day <= 5)
+  );
 }
 
 export function SnowEffect() {
-  const [enabled, setEnabled] = useState(false);
-
-  useEffect(() => {
-    if (isSnowSeason(new Date())) {
-      setEnabled(true);
-    }
-  }, []);
-
-  const flakes = useMemo<Flake[]>(() => {
-    if (!enabled) return [];
+  const [flakes] = useState<Flake[]>(() => {
+    if (!isSnowSeason(new Date())) return [];
     const count = 50;
     return Array.from({ length: count }).map((_, i) => ({
       id: i,
@@ -44,9 +38,9 @@ export function SnowEffect() {
       blur: Math.random() * 2.5,
       sparkle: Math.random() > 0.85,
     }));
-  }, [enabled]);
+  });
 
-  if (!enabled) return null;
+  if (flakes.length === 0) return null;
 
   return (
     <>
@@ -60,7 +54,11 @@ export function SnowEffect() {
             opacity: 1;
           }
           100% {
-            transform: translate3d(var(--drift, 0px), 110vh, 0)
+            transform: translate3d(
+                var(--drift, 0px),
+                110vh,
+                0
+              )
               rotate(360deg);
             opacity: 0;
           }
